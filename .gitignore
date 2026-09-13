@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+test_helper_scripts/logs/
+
+# Data generated at runtime
+data/raw/*
+data/processed/*
+data/quarantine/*
+data/geoip/*
+data/synthetic/*
+
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/quarantine/.gitkeep
+!data/geoip/.gitkeep
+!data/synthetic/.gitkeep
+
+# ML artifacts
+models/
+artifacts/
+*.joblib
+*.pkl
+*.onnx
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Docker
+docker-compose.override.yml

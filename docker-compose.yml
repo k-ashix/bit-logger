@@ -1,0 +1,59 @@
+services:
+
+  postgres:
+    image: postgres:18
+    container_name: bitlogger-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-bitlogger}
+      POSTGRES_USER: ${POSTGRES_USER:-bitlogger}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./db/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bitlogger} -d ${POSTGRES_DB:-bitlogger}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+
+    container_name: bitlogger-backend
+    restart: unless-stopped
+
+    environment:
+      APP_NAME: ${APP_NAME:-Bit-Logger}
+      APP_ENV: ${APP_ENV:-development}
+      DEBUG: ${DEBUG:-false}
+
+      POSTGRES_DB: ${POSTGRES_DB:-bitlogger}
+      POSTGRES_USER: ${POSTGRES_USER:-bitlogger}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-bitlogger}:${POSTGRES_PASSWORD:-change-me}@postgres:5432/${POSTGRES_DB:-bitlogger}
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config:ro
+
+volumes:
+  postgres_data:
