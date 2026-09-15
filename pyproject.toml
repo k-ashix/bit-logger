@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bit-logger"
+version = "0.1.0"
+description = "AI-powered Bitcoin transaction traffic monitoring and analysis platform"
+requires-python = ">=3.12,<3.13"
+
+[tool.pytest.ini_options]
+testpaths = [
+    "backend/tests",
+    "tests",
+]
+python_files = ["test_*.py"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true

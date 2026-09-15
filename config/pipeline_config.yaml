@@ -1,0 +1,56 @@
+@'
+project:
+  name: bit-logger
+  version: "0.1.0"
+  mode: offline
+
+pipeline:
+  stages:
+    - ingest
+    - enrich
+    - graph
+    - features
+    - detection
+    - scoring
+    - explain
+    - persist
+
+ingestion:
+  supported_formats:
+    - csv
+    - json
+    - xml
+  max_file_size_mb: 500
+  quarantine_enabled: true
+
+graph:
+  backend: networkx
+  include_ip_nodes: true
+  include_wallet_nodes: true
+  include_transaction_nodes: true
+
+ml:
+  clustering:
+    enabled: true
+    algorithm: hdbscan
+  anomaly:
+    enabled: true
+    algorithm: isolation_forest
+  patterns:
+    peeling_chain:
+      enabled: true
+      minimum_length: 5
+    coinjoin:
+      enabled: true
+      minimum_inputs: 3
+      minimum_outputs: 3
+
+risk:
+  minimum_score: 0
+  maximum_score: 100
+
+security:
+  offline_runtime: true
+  validate_uploaded_files: true
+  protect_path_traversal: true
+'@ | Set-Content config\pipeline_config.yaml
